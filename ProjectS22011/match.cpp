@@ -186,6 +186,7 @@ void selectKeyFrames (char* videoFileDirectory, char* xmlFileDirectory)
                 
                 int frame = 0;
                 int key = 0;
+                bool flag = false;
                 while (cap) 
                 {
                     cout << "PASS: 5"<< endl;
@@ -213,13 +214,24 @@ void selectKeyFrames (char* videoFileDirectory, char* xmlFileDirectory)
                         temp >> st;
                         s3.append(st);
                         cout << "PASS: 6"<< endl;
-                        
+                        if(flag)
+                            cout << s3 << endl;
                         cvSaveImage(s3.c_str(), cur_frame);
                         key++;
+                        ii = key;
+                        st.clear();
+                        temp.clear();
                     }
                     
-                    else if(keyframe[key] == keyframe[ii-1])
+                    while(keyframe[key] == keyframe[key-1])
                     {
+                        
+                        s3.clear();
+                        ss3.clear();
+                        ss3 << keyframeDir;
+                        ss3 >> s3;
+                        s3.append(s);
+                        s3.append("_");
                         stringstream temp;
                         string st;
                         temp << (key/3+1);
@@ -228,10 +240,12 @@ void selectKeyFrames (char* videoFileDirectory, char* xmlFileDirectory)
                         temp >> st;
                         s3.append(st);
                         cout << "PASS: 7"<< endl;
-                        
+                        cout << s3 << endl;
                         cvSaveImage(s3.c_str(), pre_frame);
                         key++;
-                        frame--;
+                        st.clear();
+                        temp.clear();
+                        flag= true;
                     }
                     frame ++;
                     pre_frame = cur_frame;
