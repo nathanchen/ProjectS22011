@@ -14,7 +14,9 @@
 #include <cv.h>
 #include <cxcore.h>
 #include <highgui.h>
+#include <fstream.h>
 
+#include <dirent.h>
 #include <stdio.h>
 #include <iostream.h>
 #include <string.h>
@@ -35,4 +37,27 @@ char img2_file[] = "/Users/natechen/Desktop/scene.pgm";
 char feat1_file[] = "/Users/natechen/Desktop/1.txt";
 char feat2_file[] = "/Users/natechen/Desktop/2.txt";
 
-void checkMatch(struct feature *feat1, struct feature *feat2, int n1, int n2);
+char xmlFile[] = "/Users/natechen/Desktop/20090601_shots/xmlTOtxt/";
+char videoFileDirectory[] = "/Users/natechen/Desktop/20090601";
+
+char keyframeDir[] = "/Users/natechen/Desktop/keyframe/";
+
+/*
+ *  extract key frames
+ *  input: directory stores video files, directory strores the keyframe info
+ *  output: key frames(image) and store them in different folders (one folder for one video file)
+ */
+void selectKeyFrames (char*, char*);
+
+/*
+ *  perform sift on all key frames
+ *  input: a main directory, which contains multiple folders
+ *  output: sift descriptor .txt file for one shot
+ */
+void generateSIFTForOneShot(char*);
+
+feature* checkMatch(struct feature *feat1, struct feature *feat2, int n1, int n2);
+
+feature* doSIFT(char*, char*);
+
+
