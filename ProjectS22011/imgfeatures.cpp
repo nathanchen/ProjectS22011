@@ -507,18 +507,18 @@ static int export_lowe_features( char* filename, struct feature* feat, int n )
 	fprintf( file, "%d %d\n", n, d );
 	for( i = 0; i < n; i++ )
 	{
-		fprintf( file, "%f %f %f %f", feat[i].y, feat[i].x,
-				feat[i].scl, feat[i].ori );
+		fprintf( file, "%f %f %f %f", 
+				feat[i].scl, feat[i].ori , feat[i].y, feat[i].x);
 		for( j = 0; j < d; j++ )
 		{
 			/* write 20 descriptor values per line */
 			if( j % 20 == 0 )
 				fprintf( file, "\n" );
-			fprintf( file, " %d", (int)(feat[i].descr[j]) );
+			fprintf( file, "%d,", (int)(feat[i].descr[j]) );
 		}
-        fprintf( file, "\n" );
-        
-        fprintf(file, " %d", feat[i].category);
+//        fprintf( file, "\n" );
+//        
+//        fprintf(file, " %d", feat[i].category);
         
 		fprintf( file, "\n" );
 	}

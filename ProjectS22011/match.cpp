@@ -11,35 +11,74 @@ Copyright (C) 2006-2010  Rob Hess <hess@eecs.oregonstate.edu>
 /********************************** Main *************************************/
 
 
-feature* doSIFT(char* img1_file, char* img2_file)
+//feature* doSIFT(char* img1_file, char* img2_file)
+feature* doSIFT(char* imgDir)
 {
-
-    IplImage* img1, *img2;
-	struct feature* feat1, * feat2;
+    DIR *dirImage;
+    struct dirent *dirI;
+    IplImage *img;
+    int n;
+    struct feature *feat;
     
-    int n1, n2 = 0;
-
-	img1 = cvLoadImage( img1_file, 1 );
-	if( ! img1 )
-		fatal_error("unable to load image from %s", img1_file );
+    if((dirImage = opendir(imgDir)) == NULL)
+    {
+        cout << "ERROR: Wrong Directory" << endl;
+        return ;
+    }
     
-	fprintf( stderr, "Finding features in %s...\n", img1_file );
-	n1 = sift_features( img1, &feat1 );
+    while ((dirI = readdir(dirImage)) != NULL) 
+    {
+        stringstream ss;
+        string s;
+        
+        ss << imgDir << "/" << dirI->d_name;
+        ss >> s;
+        
+        cout << "Pass: 1" << endl;
+        
+        size_t pos = s.find(".jpg");
+        if(pos != string::npos)
+        {
+            img = cvLoadImage(s.c_str(), 1);
+            cout << "LOAD IMAGE" << endl;
+            n = sift_features(img, &feat);
+            s.append("_sift.txt");
+            char *buf = new char[s.size()];
+            strcpy(buf, s.c_str());
+            export_features(buf, feat, n);
+            
+        }
+    }
     
-    img2 = cvLoadImage( img2_file, 1 );
-    if( ! img2 )
-    fatal_error("unable to load image from %s", img2_file );
     
-	fprintf( stderr, "Finding features in %s...\n", img2_file );
+//    IplImage* img1, *img2;
+//	struct feature* feat1, * feat2;
+//    
+//    int n1, n2 = 0;
+//
+//	img1 = cvLoadImage( img1_file, 1 );
+//	if( ! img1 )
+//		fatal_error("unable to load image from %s", img1_file );
+//    
+//	fprintf( stderr, "Finding features in %s...\n", img1_file );
+//	n1 = sift_features( img1, &feat1 );
+//    
+//    img2 = cvLoadImage( img2_file, 1 );
+//    if( ! img2 )
+//    fatal_error("unable to load image from %s", img2_file );
+//    
+//	fprintf( stderr, "Finding features in %s...\n", img2_file );
+//    
+//    n2 = sift_features(img2, &feat2);
+//    
+////    export_features(feat1_file, feat1, n1);
+////    export_features(feat2_file, feat2, n2);
+//    checkMatch(feat1, feat2, n1, n2);
+//	
+//	free( feat1 );
+//	free( feat2 );
     
-    n2 = sift_features(img2, &feat2);
     
-//    export_features(feat1_file, feat1, n1);
-//    export_features(feat2_file, feat2, n2);
-    checkMatch(feat1, feat2, n1, n2);
-	
-	free( feat1 );
-	free( feat2 );
 	return 0;
 }
 
@@ -186,7 +225,6 @@ void selectKeyFrames (char* videoFileDirectory, char* xmlFileDirectory)
                 
                 int frame = 0;
                 int key = 0;
-                bool flag = false;
                 while (cap) 
                 {
                     cout << "PASS: 5"<< endl;
@@ -214,8 +252,6 @@ void selectKeyFrames (char* videoFileDirectory, char* xmlFileDirectory)
                         temp >> st;
                         s3.append(st);
                         cout << "PASS: 6"<< endl;
-                        if(flag)
-                            cout << s3 << endl;
                         cvSaveImage(s3.c_str(), cur_frame);
                         key++;
                         ii = key;
@@ -240,12 +276,11 @@ void selectKeyFrames (char* videoFileDirectory, char* xmlFileDirectory)
                         temp >> st;
                         s3.append(st);
                         cout << "PASS: 7"<< endl;
-                        cout << s3 << endl;
+                        
                         cvSaveImage(s3.c_str(), pre_frame);
                         key++;
                         st.clear();
                         temp.clear();
-                        flag= true;
                     }
                     frame ++;
                     pre_frame = cur_frame;
@@ -266,7 +301,7 @@ void selectKeyFrames (char* videoFileDirectory, char* xmlFileDirectory)
 int main()
 {
     
-//    doSIFT(img1_file, img2_file);
-    selectKeyFrames(videoFileDirectory, xmlFile);
+    doSIFT(imgDir);
+//    selectKeyFrames(videoFileDirectory, xmlFile);
     return 0;
 }

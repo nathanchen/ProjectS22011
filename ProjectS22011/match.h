@@ -31,6 +31,11 @@ using namespace std;
 
 /******************************** Globals ************************************/
 
+char imgDir[] = "/Users/natechen/Desktop/2/2";
+feature* doSIFT(char*);
+
+
+
 char img1_file[] = "/Users/natechen/Desktop/box.pgm";
 char img2_file[] = "/Users/natechen/Desktop/scene.pgm";
 
@@ -58,6 +63,6 @@ void generateSIFTForOneShot(char*);
 
 feature* checkMatch(struct feature *feat1, struct feature *feat2, int n1, int n2);
 
-feature* doSIFT(char*, char*);
+//feature* doSIFT(char*, char*);
 
 
